@@ -1,36 +1,25 @@
-# Project Scope
+# Implementation Plan
 
-## Selected Project
-Engineering Debugging Copilot
+## Week 1
+- [ ] Study and annotate Karpathy mini-GPT
+- [ ] Run baseline training
+- [ ] Prepare debugging dataset
+- [ ] Build preprocessing script
+- [ ] Fine-tune initial checkpoint
+- [ ] Build baseline evaluation harness
 
-## Problem Statement
-Build a small transformer-based assistant specialized for engineering debugging tasks and expose it through a production-style backend with evaluation and tool integration.
+## Week 2
+- [ ] Design service architecture
+- [ ] Build `/generate` endpoint
+- [ ] Add logging and `/metrics`
+- [ ] Add batch inference endpoint
+- [ ] Add prompt routing
+- [ ] Demo local MVP
 
-## In Scope
-- mini-GPT foundation
-- debugging dataset preparation
-- fine-tuning
-- FastAPI inference endpoint
-- observability and metrics
-- MCP tool integration
-- evaluation pipeline
-
-## Out of Scope for MVP
-- large-scale distributed training
-- benchmark competition with hosted frontier models
-- polished frontend UI
-- multi-agent workflows
-- extensive deployment optimization
-
-## Primary Users
-- backend engineers
-- Python developers
-- API developers
-- engineers debugging logs/errors/configuration issues
-
-## Example Prompt Types
-- Explain this traceback
-- Why is uvicorn failing to import my app?
-- Why is my Docker container exiting?
-- Help debug this SQL query
-- Explain this FastAPI validation error
+## Week 3
+- [ ] Design tool-calling flow
+- [ ] Build MCP server skeleton
+- [ ] Integrate at least one tool
+- [ ] Add tool-aware evaluation
+- [ ] Store inference metrics
+- [ ] Final polish and documentation
