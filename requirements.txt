@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pydantic
+pytest
+torch
+numpy
+pandas
+python-dotenv
+pytest-cov

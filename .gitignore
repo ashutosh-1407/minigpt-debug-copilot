@@ -1,0 +1,16 @@
+venv/
+__pycache__/
+*.pyc
+.env
+.idea/
+.vscode/
+.DS_Store
+.pytest_cache
+
+model/checkpoints/
+data/raw/
+data/processed/*.bin
+data/processed/*.pt
+data/processed/*.pkl
+evaluation/reports/*.html
+evaluation/reports/*.png
