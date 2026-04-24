@@ -1,0 +1,30 @@
+User: Why is my SQLite database locked?
+Assistant: SQLite allows limited concurrent writes. Long-running transactions or multiple writers often trigger lock errors.
+
+User: How do I debug list index out of range in Python?
+Assistant: Start by checking the list length right before access and verify that your loop or conditional logic cannot produce an invalid index.
+
+User: Why is FastAPI returning a Pydantic validation error?
+Assistant: FastAPI validates request data against your schema. A field may be missing, have the wrong type, or be nested differently than expected.
+
+User: curl: (7) Failed to connect to localhost port 8000
+Assistant: No process is listening on that port, or the server has not finished starting. Confirm the app booted successfully and that the port is correct.
+
+User: Why am I seeing 'Event loop is closed' in Python async code?
+Assistant: This usually happens when asynchronous tasks or clients outlive the loop, or when code closes the loop and later tries to reuse async resources.
+
+User: Why does my streaming response stop working behind a proxy?
+Assistant: Reverse proxies often need explicit configuration for buffering, timeouts, and connection persistence for streaming endpoints.
+
+User: Why does Postgres say a column does not exist?
+Assistant: The query, alias, or migration state is out of sync with the real schema in the connected database.
+
+User: Error loading ASGI app. Could not import module 'main'
+Assistant: This usually means uvicorn cannot locate the target module. Check the module path you passed to uvicorn, your current working directory, and whether the file is inside a package with the expected structure.
+
+User: Why is my API call timing out?
+Assistant: The remote service may be slow, the timeout may be too low, or the request path may include blocking work that should be moved out of band.
+
+User: TypeError: got an unexpected keyword argument
+Assistant: The function signature does not accept that argument name. Check the callable's parameters and whether you passed a config key meant for a different function.
+
