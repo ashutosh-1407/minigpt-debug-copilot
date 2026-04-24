@@ -1,7 +1,7 @@
 import torch
 
 
-class TextDataProcessor:
+class CharLevelDatasetProcessor:
     def __init__(self, file_path, block_size, batch_size, device):
         self.file_path = file_path
         self.block_size = block_size

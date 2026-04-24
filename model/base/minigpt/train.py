@@ -1,5 +1,5 @@
 import torch
-from config import (
+from model.base.minigpt.config import (
     BATCH_SIZE,
     BLOCK_SIZE,
     MAX_ITERS,
@@ -13,17 +13,17 @@ from config import (
     DEVICE,
     SEED,
 )
-from data import TextDataProcessor
-from model import MiniGPTLanguageModel
-from trainer import Trainer
+from model.base.minigpt.data_loader import CharLevelDatasetProcessor
+from model.base.minigpt.model import MiniGPTLanguageModel
+from model.base.minigpt.trainer import Trainer
 
 
 def main():
     print(f"Device available: {DEVICE}")
     torch.manual_seed(SEED)
 
-    data_processor = TextDataProcessor(
-        file_path="input.txt",
+    data_processor = CharLevelDatasetProcessor(
+        file_path="model/base/minigpt/input.txt",
         block_size=BLOCK_SIZE,
         batch_size=BATCH_SIZE,
         device=DEVICE
