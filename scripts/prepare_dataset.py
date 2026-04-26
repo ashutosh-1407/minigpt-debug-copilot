@@ -1,13 +1,13 @@
 import json
 import random
 from pathlib import Path
+from config.paths import PROCESSED_DATA_DIR
 
-
-INPUT_PATH = Path("data/processed/debug_examples_v1.jsonl")
-TRAIN_JSONL_PATH = Path("data/processed/train.jsonl")
-VAL_JSONL_PATH = Path("data/processed/val.jsonl")
-TRAIN_TXT_PATH = Path("data/processed/train_conversations.txt")
-VAL_TXT_PATH = Path("data/processed/val_conversations.txt")
+INPUT_PATH = PROCESSED_DATA_DIR / "debug_examples_v1.jsonl"
+TRAIN_JSONL_PATH = PROCESSED_DATA_DIR / "train.jsonl"
+VAL_JSONL_PATH = PROCESSED_DATA_DIR / "val.jsonl"
+TRAIN_TXT_PATH = PROCESSED_DATA_DIR / "train_conversations.txt"
+VAL_TXT_PATH = PROCESSED_DATA_DIR / "val_conversations.txt"
 
 VAL_RATIO = 0.1
 SEED = 42

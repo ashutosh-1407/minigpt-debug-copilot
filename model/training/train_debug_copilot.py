@@ -5,14 +5,11 @@ from model.training.config import TrainingConfig
 from model.training.bpe_data_loader import BPEDatasetProcessor
 from model.base.minigpt.model import MiniGPTLanguageModel
 from model.base.minigpt.trainer import Trainer
-from model.utils import get_device
 
 
 def main() -> None:
-    device = get_device()
     config = TrainingConfig()
-
-    Path(config.checkpoint_dir).mkdir(parents=True, exist_ok=True)
+    device = config.device
 
     data_processor = BPEDatasetProcessor(
         train_data_path=config.train_data_path,
@@ -52,6 +49,7 @@ def main() -> None:
     )
 
     # save the checkpoint
+    Path(config.checkpoint_dir).mkdir(parents=True, exist_ok=True)
     checkpoint_path = Path(config.checkpoint_dir) / f"{config.model_version}.pt"
     torch.save(
         {

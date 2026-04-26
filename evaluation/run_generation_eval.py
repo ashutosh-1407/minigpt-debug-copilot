@@ -4,13 +4,13 @@ from pathlib import Path
 import torch
 from model.base.minigpt.model import MiniGPTLanguageModel
 from model.training.config import TrainingConfig
-from model.constants import CHECKPOINT_DIR, EVAL_PROMPTS_DIR, REPORT_DIR
-from model.utils import get_device
+from config.paths import EVAL_PROMPTS_DIR, REPORTS_DIR
 import tiktoken
 
 
 config = TrainingConfig()
-CHECKPOINT_PATH = CHECKPOINT_DIR / "debug-copilot-v1.pt"
+
+CHECKPOINT_PATH = config.checkpoint_dir + "/debug-copilot-v1.pt"
 EVAL_PROMPTS_PATH = EVAL_PROMPTS_DIR / "debug_eval_prompts.jsonl"
 
 def load_eval_prompts(path: Path) -> list[dict]:
@@ -65,12 +65,13 @@ def main() -> None:
     eval_prompts = load_eval_prompts(EVAL_PROMPTS_PATH)
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    REPORT_DIR.mkdir(parents=True, exist_ok=True)
-    output_path = REPORT_DIR / f"generation_eval_{timestamp}.md"
+    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+    output_path = REPORTS_DIR / f"generation_eval_{timestamp}.md"
 
     with output_path.open("w", encoding="utf-8") as f:
         f.write("# BPE Eval Report\n\n")
-        f.write(f"Checkpoint: `{CHECKPOINT_PATH}`\n\n")
+        checkpoint_relative = Path(CHECKPOINT_PATH).relative_to(Path(CHECKPOINT_PATH).parent.parent)
+        f.write(f"Checkpoint: `{checkpoint_relative}`\n\n")
         f.write(f"Device: `{device}`\n\n")
         f.write(f"Tokenizer: `{encoding_name}`\n\n")
 

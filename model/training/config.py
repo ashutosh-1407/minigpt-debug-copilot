@@ -1,12 +1,16 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from model.utils import get_device
+from config.paths import PROCESSED_DATA_DIR, CHECKPOINTS_DIR
+from config.settings import AppSettings
 
 
 @dataclass
 class TrainingConfig:
-    train_data_path: str = "data/processed/train_conversations.txt"
-    val_data_path: str = "data/processed/val_conversations.txt"
-    checkpoint_dir: str = "model/checkpoints"
+    settings: AppSettings = field(default=AppSettings)
+
+    train_data_path: str = str(PROCESSED_DATA_DIR / "train_conversations.txt")
+    val_data_path: str = str(PROCESSED_DATA_DIR / "val_conversations.txt")
+    checkpoint_dir: str = str(CHECKPOINTS_DIR)
 
     batch_size: int = 16
     block_size: int = 128
@@ -21,7 +25,15 @@ class TrainingConfig:
     dropout: float = 0.3
 
     device: str = get_device()
-    model_version: str = "debug-copilot-v1"
-
-    tokenizer_type: str = "bpe"
-    encoding_name: str = "gpt2"
+    
+    @property
+    def model_version(self):
+        return self.settings.model_version
+    
+    @property
+    def tokenizer_type(self):
+        return self.settings.tokenizer_type
+    
+    @property
+    def encoding_name(self):
+        return self.settings.encoding_name
