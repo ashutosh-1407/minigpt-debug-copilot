@@ -75,7 +75,7 @@ def main() -> None:
     val_examples = examples[:val_size]
     train_examples = examples[val_size:]
 
-    TRAIN_JSONL_PATH.parent.mkdir(parents=True, exist_ok=True)
+    INPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
 
     write_jsonl(TRAIN_JSONL_PATH, train_examples)
     write_jsonl(VAL_JSONL_PATH, val_examples)

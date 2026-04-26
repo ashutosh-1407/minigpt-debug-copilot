@@ -13,7 +13,7 @@ from model.base.minigpt.config import (
     DEVICE,
     SEED,
 )
-from model.base.minigpt.data_loader import CharLevelDatasetProcessor
+from model.base.minigpt.data_loader import CharDatasetProcessor
 from model.base.minigpt.model import MiniGPTLanguageModel
 from model.base.minigpt.trainer import Trainer
 
@@ -22,7 +22,7 @@ def main():
     print(f"Device available: {DEVICE}")
     torch.manual_seed(SEED)
 
-    data_processor = CharLevelDatasetProcessor(
+    data_processor = CharDatasetProcessor(
         file_path="model/base/minigpt/input.txt",
         block_size=BLOCK_SIZE,
         batch_size=BATCH_SIZE,

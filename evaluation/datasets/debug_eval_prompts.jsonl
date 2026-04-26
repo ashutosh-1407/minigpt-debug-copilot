@@ -1,0 +1,10 @@
+{"id": "docker_exit", "prompt": "User: Why is my Docker container exiting immediately?\nAssistant:"}
+{"id": "uvicorn_import", "prompt": "User: Why is uvicorn failing to import my FastAPI app?\nAssistant:"}
+{"id": "fastapi_422", "prompt": "User: Why does my FastAPI endpoint return 422?\nAssistant:"}
+{"id": "port_8000", "prompt": "User: curl failed to connect to localhost port 8000. What should I check?\nAssistant:"}
+{"id": "sqlite_table", "prompt": "User: SQLite says no such table even though I created it earlier. Why?\nAssistant:"}
+{"id": "pytest_mock", "prompt": "User: AssertionError expected call not found in pytest mock. What does it mean?\nAssistant:"}
+{"id": "postgres_column", "prompt": "User: Postgres says column does not exist. What should I verify?\nAssistant:"}
+{"id": "tensor_shape", "prompt": "User: How do I debug tensor shape mismatch errors?\nAssistant:"}
+{"id": "websocket_closed", "prompt": "User: WebSocket connection closed unexpectedly. What are likely causes?\nAssistant:"}
+{"id": "api_timeout", "prompt": "User: Why is my API call timing out?\nAssistant:"}

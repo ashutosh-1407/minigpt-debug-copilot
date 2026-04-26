@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 import torch
 from model.training.config import TrainingConfig
-from model.training.data_loader import CharDatasetProcessor
+from model.training.bpe_data_loader import BPEDatasetProcessor
 from model.base.minigpt.model import MiniGPTLanguageModel
 from model.base.minigpt.trainer import Trainer
 from model.utils import get_device
@@ -12,9 +12,9 @@ def main() -> None:
     device = get_device()
     config = TrainingConfig()
 
-    os.makedirs(config.checkpoint_dir, exist_ok=True)
+    Path(config.checkpoint_dir).mkdir(parents=True, exist_ok=True)
 
-    data_processor = CharDatasetProcessor(
+    data_processor = BPEDatasetProcessor(
         train_data_path=config.train_data_path,
         val_data_path=config.val_data_path,
         block_size=config.block_size,
@@ -56,9 +56,11 @@ def main() -> None:
     torch.save(
         {
             "model_state_dict": model.state_dict(),
-            "stoi": data_processor.stoi,
-            "itos": data_processor.itos,
-            "config": config.__dict__
+            # "stoi": data_processor.stoi,
+            # "itos": data_processor.itos,
+            "config": config.__dict__,
+            "tokenizer_type": config.tokenizer_type,
+            "encoding_name": config.encoding_name,
         },
         checkpoint_path
     )
@@ -79,6 +81,6 @@ def main() -> None:
 
     generated = model.generate(context, max_new_tokens=200)[0].tolist()
     print(data_processor.decode(generated))
-    
+
 if __name__ == "__main__":
     main()

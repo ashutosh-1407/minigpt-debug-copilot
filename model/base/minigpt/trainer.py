@@ -10,7 +10,6 @@ class Trainer:
 
     @torch.no_grad()
     def estimate_loss(self):
-        print("Calculating loss..")
         out = {}
         self.model.eval()
 
@@ -22,7 +21,6 @@ class Trainer:
                 x, y = self.data_processor.get_batch(split)
                 _, loss = self.model(x, y)
                 losses[k] = loss.item()
-            print()
             out[split] = losses.mean().item()
 
         self.model.train()
@@ -33,10 +31,9 @@ class Trainer:
             percentage = (step + 1) / max_iters * 100
             print(f"\r\033[KTrain Progress: {percentage:.2f}", end="", flush=True)
             if step % eval_interval == 0 or step == max_iters - 1:
-                print()
                 losses = self.estimate_loss()
                 print(
-                    f"step {step}: "
+                    f"\r\033[Kstep {step}: "
                     f"train loss {losses['train']:.4f}, "
                     f"val loss {losses['val']:.4f}"
                 )

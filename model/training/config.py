@@ -22,3 +22,6 @@ class TrainingConfig:
 
     device: str = get_device()
     model_version: str = "debug-copilot-v1"
+
+    tokenizer_type: str = "bpe"
+    encoding_name: str = "gpt2"
