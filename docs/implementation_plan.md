@@ -11,7 +11,7 @@
 ## Week 2
 - [x] Design service architecture
 - [x] Build `/generate` endpoint
-- [ ] Add logging and `/metrics`
+- [x] Add logging and `/metrics`
 - [ ] Add batch inference endpoint
 - [ ] Add prompt routing
 - [x] Demo local MVP
