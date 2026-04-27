@@ -1,20 +1,20 @@
 # Implementation Plan
 
 ## Week 1
-- [ ] Study and annotate Karpathy mini-GPT
-- [ ] Run baseline training
-- [ ] Prepare debugging dataset
-- [ ] Build preprocessing script
-- [ ] Fine-tune initial checkpoint
-- [ ] Build baseline evaluation harness
+- [x] Study and annotate Karpathy mini-GPT
+- [x] Run baseline training
+- [x] Prepare debugging dataset
+- [x] Build preprocessing script
+- [x] Fine-tune initial checkpoint
+- [x] Build baseline evaluation harness
 
 ## Week 2
-- [ ] Design service architecture
-- [ ] Build `/generate` endpoint
+- [x] Design service architecture
+- [x] Build `/generate` endpoint
 - [ ] Add logging and `/metrics`
 - [ ] Add batch inference endpoint
 - [ ] Add prompt routing
-- [ ] Demo local MVP
+- [x] Demo local MVP
 
 ## Week 3
 - [ ] Design tool-calling flow

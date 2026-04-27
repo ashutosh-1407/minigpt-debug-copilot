@@ -10,3 +10,4 @@ class GenerateResponse(BaseModel):
     answer: str
     latency_ms: int
     model_version: str
+    tokenize_type: str

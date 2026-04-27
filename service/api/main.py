@@ -1,8 +1,25 @@
+import time
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from service.schemas.generate import GenerateRequest, GenerateResponse
+from service.inference.model_loader import LoadedMiniGPT
+from service.inference.generator import MiniGPTGenerator
 
 
-app = FastAPI(title="MiniGPT Debug Copilot")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    loaded_model = LoadedMiniGPT()
+    app.state.generator = MiniGPTGenerator(loaded_model)
+    yield
+
+app = FastAPI(
+    title="MiniGPT Debug Copilot",
+    lifespan=lifespan
+)
+
+@app.get("/")
+def homepage() -> str:
+    return "Welcome to MiniGPT transformer based debug copilot"
 
 @app.get("/health")
 def health() -> dict:
@@ -10,9 +27,16 @@ def health() -> dict:
 
 @app.post("/generate", response_model=GenerateResponse)
 def generate(request: GenerateRequest) -> GenerateResponse:
-    # Placeholder implementation for Day 1
+    start = time.perf_counter()
+    generator: MiniGPTGenerator = app.state.generator
+    answer = generator.generate(
+        prompt=request.prompt,
+        max_new_tokens=request.max_new_tokens
+    )
+    latency_ms = int((time.perf_counter() - start) * 1000)
     return GenerateResponse(
-        answer="Model inference not implemented yet.",
-        latency_ms=0,
-        model_version="not-loaded"
+        answer=answer,
+        latency_ms=latency_ms,
+        model_version=generator.loaded_model.model_version,
+        tokenize_type=generator.loaded_model.tokenizer_type
     )

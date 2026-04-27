@@ -2,15 +2,11 @@ import json
 from datetime import datetime
 from pathlib import Path
 import torch
-from model.base.minigpt.model import MiniGPTLanguageModel
-from model.training.config import TrainingConfig
 from config.paths import EVAL_PROMPTS_DIR, REPORTS_DIR
-import tiktoken
+from model.utils import get_device
+from service.inference.model_loader import LoadedMiniGPT
 
 
-config = TrainingConfig()
-
-CHECKPOINT_PATH = config.checkpoint_dir + "/debug-copilot-v1.pt"
 EVAL_PROMPTS_PATH = EVAL_PROMPTS_DIR / "debug_eval_prompts.jsonl"
 
 def load_eval_prompts(path: Path) -> list[dict]:
@@ -31,36 +27,8 @@ def load_eval_prompts(path: Path) -> list[dict]:
 #     return [stoi[ch] for ch in text]
 
 def main() -> None:
-    device = config.device
-    checkpoint = torch.load(CHECKPOINT_PATH, map_location=device)
-    tokenizer_type = checkpoint.get("tokenizer_type", "char")
-
-    saved_config = checkpoint["config"]
-    # stoi = checkpoint["stoi"]
-    # itos = checkpoint["itos"]
-
-    if tokenizer_type != "bpe":
-        raise ValueError(
-            f"This eval script expects a BPE checkpoint, but got tokenizer_type={tokenizer_type}"
-        )
-
-    encoding_name = checkpoint["encoding_name"]
-    encoder = tiktoken.get_encoding(encoding_name)
-
-    # Sometimes dict keys may be saved as strings depending on serialization path.
-    # itos = {int(k): v for k, v in itos.items()}
-
-    model = MiniGPTLanguageModel(
-        block_size=saved_config["block_size"],
-        vocab_size=encoder.n_vocab,
-        n_embed=saved_config["n_embed"],
-        n_head=saved_config["n_head"],
-        n_layer=saved_config["n_layer"],
-        dropout=saved_config["dropout"]
-    )
-    model.load_state_dict(checkpoint["model_state_dict"])
-    model.to(device)
-    model.eval()
+    device = get_device()
+    loaded_model = LoadedMiniGPT()
 
     eval_prompts = load_eval_prompts(EVAL_PROMPTS_PATH)
 
@@ -70,28 +38,29 @@ def main() -> None:
 
     with output_path.open("w", encoding="utf-8") as f:
         f.write("# BPE Eval Report\n\n")
+        CHECKPOINT_PATH = loaded_model.settings.checkpoint_path
         checkpoint_relative = Path(CHECKPOINT_PATH).relative_to(Path(CHECKPOINT_PATH).parent.parent)
         f.write(f"Checkpoint: `{checkpoint_relative}`\n\n")
         f.write(f"Device: `{device}`\n\n")
-        f.write(f"Tokenizer: `{encoding_name}`\n\n")
+        f.write(f"Tokenizer: `{loaded_model.settings.encoding_name}`\n\n")
 
         for item in eval_prompts:
             prompt_id = item["id"]
             prompt = item["prompt"]
 
             context = torch.tensor(
-                [encoder.encode(prompt)],
+                [loaded_model.encode(prompt)],
                 dtype=torch.long,
                 device=device
             )
 
             with torch.no_grad():
-                generated = model.generate(
+                generated = loaded_model.model.generate(
                     idx=context, 
                     max_new_tokens=180
                 )[0].tolist()
             
-            text = encoder.decode(generated)
+            text = loaded_model.decode(generated)
 
             f.write(f"## {prompt_id}\n\n")
             f.write("### Prompt\n\n")
