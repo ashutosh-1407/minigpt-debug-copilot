@@ -11,3 +11,4 @@ class GenerateResponse(BaseModel):
     latency_ms: int
     model_version: str
     tokenize_type: str
+    route: str

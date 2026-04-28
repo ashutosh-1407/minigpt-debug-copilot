@@ -13,7 +13,7 @@
 - [x] Build `/generate` endpoint
 - [x] Add logging and `/metrics`
 - [ ] Add batch inference endpoint
-- [ ] Add prompt routing
+- [x] Add prompt routing
 - [x] Demo local MVP
 
 ## Week 3

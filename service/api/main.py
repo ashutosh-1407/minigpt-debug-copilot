@@ -45,7 +45,7 @@ def generate(request: GenerateRequest) -> GenerateResponse:
     )
     
     try:
-        answer = generator.generate(
+        answer, route = generator.generate(
             prompt=request.prompt,
             max_new_tokens=request.max_new_tokens
         )
@@ -62,6 +62,7 @@ def generate(request: GenerateRequest) -> GenerateResponse:
             event_name="generation_completed",
             request_id=request_id,
             output_length=len(answer),
+            route=route,
             latency_ms=latency_ms,
             success=True
         )
@@ -70,7 +71,8 @@ def generate(request: GenerateRequest) -> GenerateResponse:
             answer=answer,
             latency_ms=latency_ms,
             model_version=generator.loaded_model.model_version,
-            tokenize_type=generator.loaded_model.tokenizer_type
+            tokenize_type=generator.loaded_model.tokenizer_type,
+            route=route
         )
     except Exception as e:
         latency_ms = int((time.perf_counter() - start) * 1000)

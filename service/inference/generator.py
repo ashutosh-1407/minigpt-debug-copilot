@@ -1,5 +1,7 @@
 import torch
 from service.inference.model_loader import LoadedMiniGPT
+from service.orchestration.prompt_templates import build_prompt
+from service.orchestration.router import classify_prompt
 from model.utils import get_device
 
 
@@ -8,16 +10,15 @@ class MiniGPTGenerator:
         self.device = get_device()
         self.loaded_model = loaded_model
 
-    def build_prompt(self, user_prompt: str) -> str:
-        if user_prompt.strip().startswith("User:"):
-            return user_prompt
-        return f"User: {user_prompt.strip()}\n Assistant:"
-    
     def generate(self, prompt: str, max_new_tokens=None) -> str:
         if max_new_tokens is None:
             max_new_tokens = self.loaded_model.settings.default_max_new_tokens
 
-        formatted_prompt = self.build_prompt(prompt)
+        route = classify_prompt(prompt)
+        formatted_prompt = build_prompt(
+            prompt=prompt, 
+            route=route
+        )
 
         context = torch.tensor(
             [self.loaded_model.encode(formatted_prompt)],
@@ -34,6 +35,8 @@ class MiniGPTGenerator:
         decoded = self.loaded_model.decode(generated)
 
         if "Assistant:" in decoded:
-            return decoded.split("Assistant:", 1)[1].strip()
+            answer =  decoded.split("Assistant:", 1)[1].strip()
+        else:
+            answer = decoded.strip()
 
-        return decoded.strip()
+        return answer, route

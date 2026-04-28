@@ -13,8 +13,9 @@ def load_eval_prompts(path: Path) -> list[dict]:
     prompts = []
     with path.open("r", encoding="utf-8") as f:
         for line in f:
-            if line.strip():
-                prompts.append(json.loads(line))
+            cleaned_line = line
+            if cleaned_line:
+                prompts.append(json.loads(cleaned_line))
     return prompts
 
 # def decode(tokens: list[int], itos: dict[int, str]) -> str:

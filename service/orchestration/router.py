@@ -1,11 +1,30 @@
-def classify_prompt(prompt: str) -> str:
+from enum import Enum
+
+
+class PromptRoute(str, Enum):
+    PYTHON_ERROR = "python_error"
+    FASTAPI_ERROR = "fastapi_error"
+    DOCKER_ERROR = "docker_error"
+    SQL_ERROR = "sql_error"
+    TEST_ERROR = "test_error"
+    GENERAL_DEBUG = "general_debug"
+
+def classify_prompt(prompt: str) -> PromptRoute:
     prompt_lower = prompt.lower()
 
-    if "traceback" in prompt_lower or "error" in prompt_lower:
-        return "explain_error"
-    elif "docker" in prompt_lower:
-        return "docker_debug"
-    elif "sql" in prompt_lower:
-        return "sql_debug"
-    else:
-        return "general_debug"
+    if any(term in prompt_lower for term in ["traceback", "modulenotfounderror", "typeerror", "valueerror", "keyerror"]):
+        return PromptRoute.PYTHON_ERROR
+    
+    if any(term in prompt_lower for term in ["fastapi", "uvicorn", "pydantic", "422"]):
+        return PromptRoute.FASTAPI_ERROR
+    
+    if any(term in prompt_lower for term in ["docker", "container", "compose"]):
+        return PromptRoute.DOCKER_ERROR
+    
+    if any(term in prompt_lower for term in ["sql", "postgres", "sqlite", "table", "column"]):
+        return PromptRoute.SQL_ERROR
+    
+    if any(term in prompt_lower for term in ["pytest", "mock", "assertionerror"]):
+        return PromptRoute.TEST_ERROR
+    
+    return PromptRoute.GENERAL_DEBUG
