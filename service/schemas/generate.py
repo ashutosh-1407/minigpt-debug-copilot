@@ -12,3 +12,10 @@ class GenerateResponse(BaseModel):
     model_version: str
     tokenize_type: str
     route: str
+
+class BatchGenerateRequest(BaseModel):
+    items: list[GenerateRequest] = Field(..., min_length=1, max_length=20)
+
+class BatchGenerateResponse(BaseModel):
+    results: list[GenerateResponse]
+    total_latency_ms: int

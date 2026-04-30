@@ -12,7 +12,7 @@
 - [x] Design service architecture
 - [x] Build `/generate` endpoint
 - [x] Add logging and `/metrics`
-- [ ] Add batch inference endpoint
+- [x] Add batch inference endpoint
 - [x] Add prompt routing
 - [x] Demo local MVP
 
