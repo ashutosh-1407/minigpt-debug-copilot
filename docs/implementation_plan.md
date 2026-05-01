@@ -17,9 +17,9 @@
 - [x] Demo local MVP
 
 ## Week 3
-- [ ] Design tool-calling flow
-- [ ] Build MCP server skeleton
-- [ ] Integrate at least one tool
+- [x] Design tool-calling flow
+- [x] Build MCP server skeleton
+- [x] Integrate at least one tool
 - [ ] Add tool-aware evaluation
 - [ ] Store inference metrics
 - [ ] Final polish and documentation
