@@ -8,3 +8,4 @@ pandas
 python-dotenv
 pytest-cov
 tiktoken
+mcp>=1.2.0
