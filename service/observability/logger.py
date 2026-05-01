@@ -14,7 +14,7 @@ if not logger.handlers:
         "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
     )
     handler.setFormatter(formatter)
-    logger.addHandler = handler
+    logger.addHandler(handler)
 
 def generate_request_id() -> str:
     return str(uuid.uuid4())
@@ -25,4 +25,5 @@ def log_event(event_name: str, **kwargs):
         "timestamp": time.time(),
         **kwargs
     }
-    logger.info(json.dumps(payload))
+    log_message = " ".join(f"{k}: {v}" for k, v in payload.items())
+    logger.info(log_message)

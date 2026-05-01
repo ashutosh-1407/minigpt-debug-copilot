@@ -12,6 +12,7 @@ class GenerateResponse(BaseModel):
     model_version: str
     tokenize_type: str
     route: str
+    tool_used: str | None = None
 
 class BatchGenerateRequest(BaseModel):
     items: list[GenerateRequest] = Field(..., min_length=1, max_length=20)

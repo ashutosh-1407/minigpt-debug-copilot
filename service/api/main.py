@@ -45,7 +45,7 @@ def generate(request: GenerateRequest) -> GenerateResponse:
     )
     
     try:
-        answer, route = generator.generate(
+        answer, route, tool_used, tool_result = generator.generate(
             prompt=request.prompt,
             max_new_tokens=request.max_new_tokens
         )
@@ -63,6 +63,8 @@ def generate(request: GenerateRequest) -> GenerateResponse:
             request_id=request_id,
             output_length=len(answer),
             route=route.value,
+            tool_used=tool_used,
+            tool_success=tool_result["success"] if tool_result else None,
             latency_ms=latency_ms,
             success=True
         )
@@ -72,7 +74,8 @@ def generate(request: GenerateRequest) -> GenerateResponse:
             latency_ms=latency_ms,
             model_version=generator.loaded_model.model_version,
             tokenize_type=generator.loaded_model.tokenizer_type,
-            route=route.value
+            route=route.value,
+            tool_used=tool_used
         )
     except Exception as e:
         latency_ms = int((time.perf_counter() - start) * 1000)
@@ -116,7 +119,7 @@ def batch_generate(request: BatchGenerateRequest) -> BatchGenerateResponse:
         )
 
         try:
-            answer, route = generator.generate(
+            answer, route, tool_used, tool_result = generator.generate(
                 prompt=item.prompt,
                 max_new_tokens=item.max_new_tokens
             )
@@ -134,6 +137,8 @@ def batch_generate(request: BatchGenerateRequest) -> BatchGenerateResponse:
                 request_id=request_id,
                 output_length=len(answer),
                 route=route.value,
+                tool_used=tool_used,
+                tool_success=tool_result["success"] if tool_result else None,
                 latency_ms=latency_ms,
                 success=True
             )
@@ -144,7 +149,8 @@ def batch_generate(request: BatchGenerateRequest) -> BatchGenerateResponse:
                     latency_ms=latency_ms,
                     model_version=generator.loaded_model.model_version,
                     tokenize_type=generator.loaded_model.tokenizer_type,
-                    route=route.value
+                    route=route.value,
+                    tool_used=tool_used
                 )
             )
         except Exception as e:
