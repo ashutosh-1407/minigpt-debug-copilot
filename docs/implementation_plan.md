@@ -20,6 +20,6 @@
 - [x] Design tool-calling flow
 - [x] Build MCP server skeleton
 - [x] Integrate at least one tool
-- [ ] Add tool-aware evaluation
+- [x] Add tool-aware evaluation
 - [ ] Store inference metrics
 - [ ] Final polish and documentation

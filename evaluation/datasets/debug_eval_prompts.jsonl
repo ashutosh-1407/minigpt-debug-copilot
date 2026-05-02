@@ -1,10 +1,14 @@
-{"id": "docker_exit", "prompt": "User: Why is my Docker container exiting immediately?\nAssistant:"}
-{"id": "uvicorn_import", "prompt": "User: Why is uvicorn failing to import my FastAPI app?\nAssistant:"}
-{"id": "fastapi_422", "prompt": "User: Why does my FastAPI endpoint return 422?\nAssistant:"}
-{"id": "port_8000", "prompt": "User: curl failed to connect to localhost port 8000. What should I check?\nAssistant:"}
-{"id": "sqlite_table", "prompt": "User: SQLite says no such table even though I created it earlier. Why?\nAssistant:"}
-{"id": "pytest_mock", "prompt": "User: AssertionError expected call not found in pytest mock. What does it mean?\nAssistant:"}
-{"id": "postgres_column", "prompt": "User: Postgres says column does not exist. What should I verify?\nAssistant:"}
-{"id": "tensor_shape", "prompt": "User: How do I debug tensor shape mismatch errors?\nAssistant:"}
-{"id": "websocket_closed", "prompt": "User: WebSocket connection closed unexpectedly. What are likely causes?\nAssistant:"}
-{"id": "api_timeout", "prompt": "User: Why is my API call timing out?\nAssistant:"}
+{"id": "docker_exit", "prompt": "User: Why is my Docker container exiting immediately?\nAssistant:", "expected_tool": null}
+{"id": "uvicorn_import", "prompt": "User: Why is uvicorn failing to import my FastAPI app?\nAssistant:", "expected_tool": null}
+{"id": "fastapi_422", "prompt": "User: Why does my FastAPI endpoint return 422?\nAssistant:", "expected_tool": null}
+{"id": "port_8000", "prompt": "User: curl failed to connect to localhost port 8000. What should I check?\nAssistant:", "expected_tool": null}
+{"id": "sqlite_table", "prompt": "User: SQLite says no such table even though I created it earlier. Why?\nAssistant:", "expected_tool": null}
+{"id": "pytest_mock", "prompt": "User: AssertionError expected call not found in pytest mock. What does it mean?\nAssistant:", "expected_tool": null}
+{"id": "postgres_column", "prompt": "User: Postgres says column does not exist. What should I verify?\nAssistant:", "expected_tool": null}
+{"id": "tensor_shape", "prompt": "User: How do I debug tensor shape mismatch errors?\nAssistant:", "expected_tool": null}
+{"id": "websocket_closed", "prompt": "User: WebSocket connection closed unexpectedly. What are likely causes?\nAssistant:", "expected_tool": null}
+{"id": "api_timeout", "prompt": "User: Why is my API call timing out?\nAssistant:", "expected_tool": null}
+{"id": "tool_1", "prompt": "What does this return: len([1,2,3])?", "expected_tool": "python_executor", "direct_answer": "3"}
+{"id": "tool_2", "prompt": "Evaluate this: 5 * 10", "expected_tool": "python_executor", "direct_answer": "50"}
+{"id": "tool_3", "prompt": "Why does int('abc') fail?", "expected_tool": "python_executor"}
+{"id": "tool_4", "prompt": "Why is my Docker container exiting immediately?", "expected_tool": null}

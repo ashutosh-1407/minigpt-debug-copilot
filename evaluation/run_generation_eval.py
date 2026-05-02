@@ -5,6 +5,7 @@ import torch
 from config.paths import EVAL_PROMPTS_DIR, REPORTS_DIR
 from model.utils import get_device
 from service.inference.model_loader import LoadedMiniGPT
+from service.inference.generator import MiniGPTGenerator
 
 
 EVAL_PROMPTS_PATH = EVAL_PROMPTS_DIR / "debug_eval_prompts.jsonl"
@@ -28,8 +29,14 @@ def load_eval_prompts(path: Path) -> list[dict]:
 #     return [stoi[ch] for ch in text]
 
 def main() -> None:
+    tool_total = 0
+    tool_correct = 0
+    direct_total = 0
+    direct_correct = 0
+
     device = get_device()
     loaded_model = LoadedMiniGPT()
+    generator = MiniGPTGenerator(loaded_model)
 
     eval_prompts = load_eval_prompts(EVAL_PROMPTS_PATH)
 
@@ -49,19 +56,22 @@ def main() -> None:
             prompt_id = item["id"]
             prompt = item["prompt"]
 
-            context = torch.tensor(
-                [loaded_model.encode(prompt)],
-                dtype=torch.long,
-                device=device
-            )
-
             with torch.no_grad():
-                generated = loaded_model.model.generate(
-                    idx=context, 
+                answer, _, tool_used, tool_result = generator.generate(
+                    prompt=prompt, 
                     max_new_tokens=180
-                )[0].tolist()
+                )
             
-            text = loaded_model.decode(generated)
+            expected_tool = item.get("expected_tool")
+            if expected_tool is not None:
+                tool_total += 1
+                if tool_used == expected_tool:
+                    tool_correct += 1
+            
+            if "direct_answer" in item:
+                direct_total += 1
+                if item["direct_answer"] in answer:
+                    direct_correct += 1
 
             f.write(f"## {prompt_id}\n\n")
             f.write("### Prompt\n\n")
@@ -70,8 +80,13 @@ def main() -> None:
             f.write("\n```\n\n")
             f.write("### Output\n\n")
             f.write("```text\n")
-            f.write(text)
+            f.write(answer)
             f.write("\n```\n\n")
+            f.write("\n# Summary\n\n")
+            if tool_total > 0:
+                f.write(f"Tool usage accuracy: {tool_correct} / {tool_total}\n\n")
+            if direct_total > 0:
+                f.write(f"Direct answer accuracy: {direct_correct} / {direct_total}\n\n")
 
     print(f"Wrote eval report: {output_path}")
 
