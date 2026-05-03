@@ -1,0 +1,58 @@
+User: Why does my long-running HTTP request timeout?
+Assistant: HTTP servers and proxies often have timeout limits. Move long tasks to background jobs, websockets, polling, or streaming responses.
+<END>
+
+User: Why does a websocket connection fail?
+Assistant: The URL, protocol, proxy, CORS, or server route may be wrong. Confirm ws:// or wss://, server endpoint, and frontend connection logic.
+<END>
+
+User: Debug this error:
+ERROR 042
+Evaluation:
+ImportError: cannot import name 'LoadedMiniGPT' from 'inference'
+Assistant: The class/function name or module path changed but eval imports were not updated.
+<END>
+
+User: Why does my API return 404?
+Assistant: The requested route is not registered or the HTTP method/path is wrong. Verify the router prefix, endpoint path, and whether you are using GET, POST, PUT, or DELETE correctly.
+<END>
+
+User: Debug this error:
+ERROR 016
+React useEffect issue:
+Effect keeps calling API repeatedly after setData(data)
+Assistant: Dependency array includes state that is updated by the effect.
+<END>
+
+User: Debug this error:
+ERROR 001
+Command: python app.py
+Traceback (most recent call last):
+  File "app.py", line 4, in <module>
+    value = int("abc")
+ValueError: invalid literal for int() with base 10: 'abc'
+Assistant: Convert only numeric strings or catch ValueError.
+<END>
+
+User: Why am I getting TypeError: unsupported operand type(s) for +: 'int' and 'str'?
+Assistant: You are trying to add a number and a string directly. Convert the string to an int if it represents a number, or convert the int to a string if you want concatenation.
+<END>
+
+User: Debug this error:
+ERROR 021
+Pytest:
+fixture 'client' not found
+Assistant: Define the fixture in the test file or conftest.py.
+<END>
+
+User: Why is my React component re-rendering too often?
+Assistant: State or props may be changing frequently, or functions/objects are recreated on each render. Use memoization, stable dependencies, and avoid unnecessary state updates.
+<END>
+
+User: Debug this error:
+ERROR 029
+Excel export:
+Process killed while writing 2 million rows to xlsx.
+Assistant: Memory usage is too high; chunk writes and reduce formatting.
+<END>
+
