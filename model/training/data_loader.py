@@ -1,31 +1,34 @@
 from pathlib import Path
 import torch
+from model.tokenizer.char_tokenizer import CharTokenizer
+from model.tokenizer.bpe_tokenizer import BPETokenizer
 
 
-class CharDatasetProcessor:
-    def __init__(self, train_data_path: str, val_data_path: str, block_size: int, batch_size: int, device: str = "cpu"):
+class TrainingDataLoader:
+    def __init__(self, train_data_path: str, val_data_path: str, block_size: int, batch_size: int, device: str = "cpu", tokenizer_type: str = "bpe", encoding_name: str = "gpt2"):
         train_text = Path(train_data_path).read_text(encoding="utf-8")
         val_text = Path(val_data_path).read_text(encoding="utf-8")
-
-        full_text = train_text + val_text
-        chars = sorted(list(set(full_text)))
-        self.vocab_size = len(chars)
-
-        self.stoi = {ch: i for i, ch in enumerate(chars)}
-        self.itos = {i: ch for i, ch in enumerate(chars)}
-
-        self.train_data = torch.tensor(self.encode(train_text), dtype=torch.long)
-        self.val_data = torch.tensor(self.encode(val_text), dtype=torch.long)
-
         self.block_size = block_size
         self.batch_size = batch_size
         self.device = device
 
+        if tokenizer_type == "bpe":
+            self.tokenizer = BPETokenizer(encoding_name)
+        elif tokenizer_type == "char":
+            self.tokenizer = CharTokenizer(train_text + val_text)
+        else:
+            raise ValueError(f"Unsupported tokenizer type: {tokenizer_type}")
+        
+        self.vocab_size = self.tokenizer.vocab_size
+
+        self.train_data = torch.tensor(self.encode(train_text), dtype=torch.long)
+        self.val_data = torch.tensor(self.encode(val_text), dtype=torch.long)   
+
     def encode(self, text: str) -> list[int]:
-        return [self.stoi[ch] for ch in text]
+        return self.tokenizer.encode(text)
 
     def decode(self, tokens: list[int]) -> str:
-        return "".join([self.itos[i] for i in tokens])
+        return self.tokenizer.decode(tokens)
     
     def get_batch(self, split: str):
         data = self.train_data if split == "train" else self.val_data

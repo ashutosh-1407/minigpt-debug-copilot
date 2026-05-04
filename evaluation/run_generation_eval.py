@@ -50,14 +50,16 @@ def main() -> None:
         checkpoint_relative = Path(CHECKPOINT_PATH).relative_to(Path(CHECKPOINT_PATH).parent.parent)
         f.write(f"Checkpoint: `{checkpoint_relative}`\n\n")
         f.write(f"Device: `{device}`\n\n")
-        f.write(f"Tokenizer: `{loaded_model.settings.encoding_name}`\n\n")
+        f.write(f"Tokenizer: `{loaded_model.tokenizer_type}`\n\n")
+        if loaded_model.tokenizer_type == "bpe":
+            f.write(f"Encoding Name: `{loaded_model.encoding_name}`\n\n")
 
         for item in eval_prompts:
             prompt_id = item["id"]
             prompt = item["prompt"]
 
             with torch.no_grad():
-                answer, _, tool_used, tool_result = generator.generate(
+                answer, route, tool_used, tool_result = generator.generate(
                     prompt=prompt, 
                     max_new_tokens=180
                 )
@@ -66,6 +68,10 @@ def main() -> None:
             if expected_tool is not None:
                 tool_total += 1
                 if tool_used == expected_tool:
+                    tool_correct += 1
+            else:
+                tool_total += 1
+                if tool_used == None:
                     tool_correct += 1
             
             if "direct_answer" in item:
@@ -78,15 +84,29 @@ def main() -> None:
             f.write("```text\n")
             f.write(prompt)
             f.write("\n```\n\n")
+
             f.write("### Output\n\n")
             f.write("```text\n")
             f.write(answer)
             f.write("\n```\n\n")
-            f.write("\n# Summary\n\n")
-            if tool_total > 0:
-                f.write(f"Tool usage accuracy: {tool_correct} / {tool_total}\n\n")
-            if direct_total > 0:
-                f.write(f"Direct answer accuracy: {direct_correct} / {direct_total}\n\n")
+
+            f.write("### Route\n\n")
+            f.write(f"{route.value}\n\n")
+
+            f.write("### Tool Used\n\n")
+            f.write(f"{tool_used}\n\n")
+
+            if tool_result:
+                f.write("### Tool Result\n\n")
+                f.write("```json\n")
+                f.write(json.dumps(tool_result, indent=2))
+                f.write("\n```\n\n")
+
+        f.write("# Summary\n\n")
+        if tool_total > 0:
+            f.write(f"Tool usage accuracy: {tool_correct} / {tool_total}\n\n")
+        if direct_total > 0:
+            f.write(f"Direct answer accuracy: {direct_correct} / {direct_total}\n\n")
 
     print(f"Wrote eval report: {output_path}")
 
