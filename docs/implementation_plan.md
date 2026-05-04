@@ -21,5 +21,5 @@
 - [x] Build MCP server skeleton
 - [x] Integrate at least one tool
 - [x] Add tool-aware evaluation
-- [ ] Store inference metrics
-- [ ] Final polish and documentation
+- [x] Store inference metrics - skipped intentionally; already implemented similar SQLite persistence in llm-rag-agent project
+- [x] Final polish and documentation
