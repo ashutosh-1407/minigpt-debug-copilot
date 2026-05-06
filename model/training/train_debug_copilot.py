@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 import torch
+import time
 from model.training.config import TrainingConfig
 from model.training.data_loader import TrainingDataLoader
 from model.base.minigpt.model import MiniGPTLanguageModel
@@ -35,6 +36,8 @@ def main() -> None:
         dropout=config.dropout
     )
     model.to(device)
+
+    print("Training with ", sum(param.numel() for param in model.parameters()) / 1e6, "M parameters")
     
     optimizer = torch.optim.AdamW(model.parameters(), lr=config.learning_rate)
 
@@ -45,10 +48,13 @@ def main() -> None:
         eval_iters=config.eval_iters
     )
 
+    start_time = time.perf_counter()
     trainer.train(
         max_iters=config.max_iters,
         eval_interval=config.eval_interval
     )
+    total_time = int((time.perf_counter() - start_time) / 60)
+    print(f"Total time taken in training: {total_time} minutes")
 
     # save the checkpoint
     Path(config.checkpoint_dir).mkdir(parents=True, exist_ok=True)
@@ -82,7 +88,8 @@ def main() -> None:
         device=device,
     )
 
-    generated = model.generate(context, max_new_tokens=200)[0].tolist()
+    end_token_id = data_loader.encode("<END>")[0]
+    generated = model.generate(context, max_new_tokens=100, end_token_id=end_token_id)[0].tolist()
     print(data_loader.decode(generated))
 
 if __name__ == "__main__":

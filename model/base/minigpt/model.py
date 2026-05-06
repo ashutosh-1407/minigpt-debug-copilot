@@ -122,19 +122,46 @@ class MiniGPTLanguageModel(nn.Module):
 
         return logits, loss
 
-    def generate(self, idx, max_new_tokens):
+    def generate(self, idx, max_new_tokens, end_token_id=None):
         # idx is (B, T) array of indices in the current context
         for _ in range(max_new_tokens):
             # crop idx to last block_size tokens
             idx_cond = idx[:, -self.block_size: ]
             # get the predictions
             logits, loss = self(idx_cond)
-            # focus only on the last time step
-            logits = logits[:, -1, :] # becomes (B, C)
-            # apply softmax to get probabilities
+            
+            # 1. Focus on the last predicted token and apply "Temperature"
+            # We only care about the next word (last position in the sequence).
+            # Dividing by 0.3 (low temperature) makes the model more confident/predictable.
+            logits = logits[:, -1, :] / 0.3  # Shape: [Batch, Vocab_Size]
+
+            # 2. Apply Repetition Penalty
+            # Look at every token already in the current sequence (idx[0]).
+            # Divide their scores by 1.2 to make them less likely to be picked again.
+            # We iterate through the batch (b) to handle each sequence's history independently.
+            for b in range(logits.size(0)):
+                # idx[b] gives the history for the b-th item in the batch
+                for token in set(idx[b].tolist()):
+                    if logits[b, token] > 0:
+                        logits[b, token] /= 1.2
+                    else:
+                        logits[b, token] *= 1.2  # Makes negative scores even "worse"
+
+            # 3. Top-K Filtering (K=5)
+            # Find the scores of the top 5 most likely next tokens.
+            v, _ = torch.topk(logits, min(5, logits.size(-1)))
+
+            # 4. Zero-out low probability options
+            # If a token's score is lower than the 5th best score, set it to -Infinity.
+            # This ensures that after Softmax, only the Top 5 tokens have a chance to be chosen.
+            logits[logits < v[:, [-1]]] = -float("Inf")
+
             probs = F.softmax(logits, dim=-1) # (B, C)
             # sample from the distribution
             idx_next = torch.multinomial(probs, num_samples=1) # (B, 1)
+            # idx_next = torch.argmax(logits, dim=-1, keepdim=True)
             # append sampled index to the running sequence
+            if end_token_id is not None and idx_next.item() == end_token_id:
+                break
             idx = torch.cat((idx, idx_next), dim=1) # (B, T+1)
         return idx

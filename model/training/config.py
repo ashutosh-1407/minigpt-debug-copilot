@@ -13,15 +13,15 @@ class TrainingConfig:
     checkpoint_dir: str = str(CHECKPOINTS_DIR)
 
     batch_size: int = 16
-    block_size: int = 128
-    max_iters: int = 1200
+    block_size: int = 256
+    max_iters: int = 2000
     eval_interval: int = 100
     eval_iters: int = 50
-    learning_rate: float = 3e-4
+    learning_rate: float = 1e-4
 
-    n_embed: int = 96
+    n_embed: int = 64
     n_head: int = 4
-    n_layer: int = 3
+    n_layer: int = 2
     dropout: float = 0.3
 
     device: str = get_device()

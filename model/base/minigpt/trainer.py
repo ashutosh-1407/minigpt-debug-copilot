@@ -1,4 +1,5 @@
 import torch
+from model.utils import plot_train_val_loss_curve
 
 
 class Trainer:
@@ -27,11 +28,16 @@ class Trainer:
         return out
     
     def train(self, max_iters, eval_interval):
+        train_losses = []
+        val_losses = []
+
         for step in range(max_iters):
             percentage = (step + 1) / max_iters * 100
             print(f"\r\033[KTrain Progress: {percentage:.2f}", end="", flush=True)
             if step % eval_interval == 0 or step == max_iters - 1:
                 losses = self.estimate_loss()
+                train_losses.append(losses["train"])
+                val_losses.append(losses["val"])
                 print(
                     f"\r\033[Kstep {step}: "
                     f"train loss {losses['train']:.4f}, "
@@ -44,3 +50,8 @@ class Trainer:
             self.optimizer.zero_grad(set_to_none=True)
             loss.backward()
             self.optimizer.step()
+        
+        plot_train_val_loss_curve(
+            train_losses=train_losses,
+            val_losses=val_losses
+        )  

@@ -51,10 +51,12 @@ class MiniGPTGenerator:
             device=self.device
         )
 
+        end_token_id = self.loaded_model.tokenizer.encode("<END>")[0]
         with torch.no_grad():
             generated = self.loaded_model.model.generate(
                 context,
                 max_new_tokens=max_new_tokens,
+                end_token_id=end_token_id
             )[0].tolist()
         
         decoded = self.loaded_model.decode(generated)

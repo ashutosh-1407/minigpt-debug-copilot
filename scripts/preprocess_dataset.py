@@ -92,9 +92,9 @@ def write_examples(path: Path, examples: Iterable[str]) -> None:
 
 def main() -> None:
     qa_examples = load_debug_qa(DEBUB_QA_PATH)
-    error_examples = load_errors(ERRORS_PATH)
+    # error_examples = load_errors(ERRORS_PATH)
 
-    all_examples = qa_examples + error_examples
+    all_examples = qa_examples #+ error_examples
 
     train_examples, val_examples = train_val_split(all_examples)
 
@@ -102,7 +102,7 @@ def main() -> None:
     write_examples(VAL_PATH, val_examples)
 
     print(f"Loaded QA examples: {len(qa_examples)}")
-    print(f"Loaded error examples: {len(error_examples)}")
+    # print(f"Loaded error examples: {len(error_examples)}")
     print(f"Total examples: {len(all_examples)}")
     print(f"Wrote train examples: {len(train_examples)} -> {TRAIN_PATH}")
     print(f"Wrote val examples: {len(val_examples)} -> {VAL_PATH}")
