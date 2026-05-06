@@ -58,6 +58,7 @@ User Request
 
 ## Project Structure
 
+```text
 minigpt-debug-copilot/
 ├── config/                    # Global configuration (paths, settings)
 │   ├── paths.py
@@ -100,10 +101,13 @@ minigpt-debug-copilot/
 │
 ├── requirements.txt
 └── README.md
+```
 
+```text
 config → model → service → evaluation
            ↑         
 scripts → data
+```
 
 ---
 
