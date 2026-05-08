@@ -3,9 +3,11 @@ uvicorn
 pydantic
 pytest
 torch
-numpy
-pandas
 python-dotenv
 pytest-cov
 tiktoken
 mcp>=1.2.0
+matplotlib
+transformers
+datasets
+accelerate

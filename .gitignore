@@ -7,5 +7,6 @@ __pycache__/
 .DS_Store
 .pytest_cache
 
+data/processed/
 model/checkpoints/
 evaluation/reports/
