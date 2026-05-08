@@ -1,5 +1,5 @@
 import torch
-from service.inference.model_loader import LoadedMiniGPT
+from model.loaders.base_loader import LoadedMiniGPT
 from service.orchestration.prompt_templates import build_prompt
 from service.orchestration.router import classify_prompt
 from service.orchestration.tool_router import should_use_python_tool, should_return_tool_output_directly, extract_python_code

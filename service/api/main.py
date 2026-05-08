@@ -2,16 +2,16 @@ import time
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from service.schemas.generate import GenerateRequest, GenerateResponse, BatchGenerateRequest, BatchGenerateResponse
-from service.inference.model_loader import LoadedMiniGPT
-from service.inference.generator import MiniGPTGenerator
+from model.loaders.pretrained_loader import LoadedPretrainedModel
+from service.inference.pretrained_generator import PretrainedModelGenerator
 from service.observability.metrics import MetricsStore
 from service.observability.logger import generate_request_id, log_event
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    loaded_model = LoadedMiniGPT()
-    app.state.generator = MiniGPTGenerator(loaded_model)
+    loaded_model = LoadedPretrainedModel("model/checkpoints/gpt2-debug-final")
+    app.state.generator = PretrainedModelGenerator(loaded_model)
     app.state.metrics = MetricsStore()
     yield
 
@@ -33,7 +33,7 @@ def generate(request: GenerateRequest) -> GenerateResponse:
     request_id = generate_request_id()
     start = time.perf_counter()
 
-    generator: MiniGPTGenerator = app.state.generator
+    generator: LoadedPretrainedModel = app.state.generator
     metrics: MetricsStore = app.state.metrics
 
     log_event(
@@ -101,7 +101,7 @@ def generate(request: GenerateRequest) -> GenerateResponse:
 def batch_generate(request: BatchGenerateRequest) -> BatchGenerateResponse:
     batch_start = time.perf_counter()
 
-    generator: MiniGPTGenerator = app.state.generator
+    generator: PretrainedModelGenerator = app.state.generator
     metrics: MetricsStore = app.state.metrics
 
     results: list[GenerateResponse] = []
