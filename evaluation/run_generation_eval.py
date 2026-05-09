@@ -1,11 +1,23 @@
+import argparse
 import json
 from datetime import datetime
 from pathlib import Path
 import torch
 from config.paths import EVAL_PROMPTS_DIR, REPORTS_DIR
 from model.utils import get_device
-from service.inference.model_loader import LoadedMiniGPT
-from service.inference.generator import MiniGPTGenerator
+from model.loaders.base_loader import LoadedMiniGPT
+from model.loaders.pretrained_loader import LoadedPretrainedModel
+from service.inference.base_generator import MiniGPTGenerator
+from service.inference.pretrained_generator import PretrainedModelGenerator
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "--model",
+    choices=["base", "pretrained"],
+    required=True
+)
+args = parser.parse_args()
 
 
 EVAL_PROMPTS_PATH = EVAL_PROMPTS_DIR / "debug_eval_prompts.jsonl"
@@ -35,8 +47,15 @@ def main() -> None:
     direct_correct = 0
 
     device = get_device()
-    loaded_model = LoadedMiniGPT()
-    generator = MiniGPTGenerator(loaded_model)
+
+    if args.model == "base":
+        CHECKPOINT_PATH = "model/checkpoints/debug-copilot-v1.pt"
+        loaded_model = LoadedMiniGPT(CHECKPOINT_PATH)
+        generator = MiniGPTGenerator(loaded_model)
+    elif args.model == "pretrained":
+        CHECKPOINT_PATH = "model/checkpoints/gpt2-debug-final"
+        loaded_model = LoadedPretrainedModel(CHECKPOINT_PATH)
+        generator = PretrainedModelGenerator(loaded_model)
 
     eval_prompts = load_eval_prompts(EVAL_PROMPTS_PATH)
 
@@ -46,13 +65,12 @@ def main() -> None:
 
     with output_path.open("w", encoding="utf-8") as f:
         f.write("# BPE Eval Report\n\n")
-        CHECKPOINT_PATH = loaded_model.settings.checkpoint_path
         checkpoint_relative = Path(CHECKPOINT_PATH).relative_to(Path(CHECKPOINT_PATH).parent.parent)
         f.write(f"Checkpoint: `{checkpoint_relative}`\n\n")
         f.write(f"Device: `{device}`\n\n")
         f.write(f"Tokenizer: `{loaded_model.tokenizer_type}`\n\n")
-        if loaded_model.tokenizer_type == "bpe":
-            f.write(f"Encoding Name: `{loaded_model.encoding_name}`\n\n")
+        # if loaded_model.tokenizer_type == "bpe":
+        #     f.write(f"Encoding Name: `{loaded_model.encoding_name}`\n\n")
 
         for item in eval_prompts:
             prompt_id = item["id"]

@@ -7,7 +7,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     
     parser.add_argument(
-        "--mode",
+        "--model",
         choices=["base", "pretrained"],
         required=True
     )
@@ -20,9 +20,9 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    if args.mode == "base":
+    if args.model == "base":
         base_run_training(args.tokenizer)
-    elif args.mode == "pretrained":
+    elif args.model == "pretrained":
         pretrained_run_training()
 
 if __name__ == "__main__":

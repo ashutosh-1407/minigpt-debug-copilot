@@ -82,7 +82,10 @@ minigpt-debug-copilot/
 │
 ├── model/
 │   ├── base/minigpt/          # Core transformer model + trainer
+│   ├── loaders/               # Loaders for base/pretrained models
 │   ├── training/              # Training configs and data loaders
+│   │   ├── base/              # Training for base model
+│   │   └── pretrained/        # Training for pretrained model
 │   ├── tokenizer/             # Tokenizer utilities (BPE/char)
 │   └── checkpoints/           # Saved model checkpoints
 │
@@ -91,7 +94,7 @@ minigpt-debug-copilot/
 │
 ├── service/
 │   ├── api/                   # FastAPI app entrypoint
-│   ├── inference/             # Model loading + generation logic
+│   ├── inference/             # Generation logic
 │   ├── orchestration/         # Prompt + tool routing logic
 │   ├── observability/         # Metrics + structured logging
 │   ├── schemas/               # Request/response models

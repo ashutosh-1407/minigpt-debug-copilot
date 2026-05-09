@@ -4,14 +4,12 @@ import tiktoken
 from model.base.minigpt.model import MiniGPTLanguageModel
 from model.utils import get_device
 from model.tokenizer.char_tokenizer import CharTokenizer
-from config.settings import AppSettings
 
 
 class LoadedMiniGPT:
-    def __init__(self, settings: AppSettings | None = None):
-        self.settings = settings or AppSettings()
+    def __init__(self, checkpoint_path: str):
         device = get_device()
-        checkpoint_path = Path(self.settings.checkpoint_path)
+        checkpoint_path = Path(checkpoint_path)
 
         if not checkpoint_path.exists():
             raise FileNotFoundError(f"Checkpoint not found: {checkpoint_path}")

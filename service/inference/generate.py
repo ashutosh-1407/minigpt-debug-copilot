@@ -30,7 +30,7 @@ def main():
             prompt=args.prompt,
             tokenizer_type=args.tokenizer,
         )
-    else:
+    elif args.model == "pretrained":
         answer = generate_pretrained(prompt=args.prompt)
 
     print(answer)

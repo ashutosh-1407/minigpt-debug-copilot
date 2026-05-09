@@ -12,13 +12,13 @@ def run_training(tokenizer_type: str = None) -> None:
     config = TrainingConfig()
     device = config.device
 
-    if tokenizer_type == "" or tokenizer_type is None:
-        tokenizer_type = config.tokenizer_type
-        encoding_name = config.encoding_name
-    elif tokenizer_type == "char":
-        encoding_name = ""
-    elif tokenizer_type == "bpe":
-        encoding_name = "gpt2"
+    # Overridding model configs
+    if tokenizer_type is not None:
+        config.settings.tokenizer_type = tokenizer_type
+        if tokenizer_type == "char":
+            config.settings.encoding_name = ""
+        elif tokenizer_type == "bpe":
+            config.settings.encoding_name = "gpt2"
 
     data_loader = TrainingDataLoader(
         train_data_path=config.train_data_path,
@@ -26,8 +26,8 @@ def run_training(tokenizer_type: str = None) -> None:
         block_size=config.block_size,
         batch_size=config.batch_size,
         device=device,
-        tokenizer_type=tokenizer_type,
-        encoding_name=encoding_name
+        tokenizer_type=config.tokenizer_type,
+        encoding_name=config.encoding_name
     )
 
     print(f"Device: {device}")
